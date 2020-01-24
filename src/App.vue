@@ -1,6 +1,8 @@
 <template>
   <div id="app">
     <div id="jsoneditor" style="width: 400px; height: 400px;"></div>
+    <button @click="onUp">onUp</button>
+    <button @click="onDown">onDown</button>
     <div id="jsoneditor2" style="width: 400px; height: 400px;"></div>
   </div>
 </template>
@@ -21,7 +23,9 @@ export default {
         Number: 123,
         Object: { a: "b", c: "d" },
         String: "Hello World"
-      }
+      },
+      leftEditor: null,
+      rightEditor: null
     };
   },
   mounted() {
@@ -29,19 +33,23 @@ export default {
     this.rightCreate();
   },
   methods: {
+    onUp() {
+      let t = this.rightEditor.get();
+      this.leftEditor.set(t);
+    },
+    onDown() {
+      let t = this.leftEditor.get();
+      this.rightEditor.set(t);
+    },
     leftCreate() {
       const container = document.getElementById("jsoneditor");
-      const options = { mode: "code" };
-      const editor = new JSONEditor(container, options);
-
-      editor.set(this.jsonData);
+      this.leftEditor = new JSONEditor(container, { mode: "code" });
+      this.leftEditor.set(this.jsonData);
     },
     rightCreate() {
       const container = document.getElementById("jsoneditor2");
-      const options = {};
-      const editor = new JSONEditor(container, options);
-
-      editor.set(this.jsonData);
+      this.rightEditor = new JSONEditor(container, {});
+      this.rightEditor.set(this.jsonData);
     }
   }
 };
