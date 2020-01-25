@@ -1,9 +1,11 @@
 <template>
-  <div id="app">
-    <div id="jsoneditor" style="width: 400px; height: 400px;"></div>
-    <button @click="onUp">onUp</button>
-    <button @click="onDown">onDown</button>
-    <div id="jsoneditor2" style="width: 400px; height: 400px;"></div>
+  <div id="app" class="container">
+    <div id="first" class="first"></div>
+    <div id="separator" class="separator">
+      <button @click="onDown">-></button>
+      <button @click="onUp">(-</button>
+    </div>
+    <div id="second" class="second"></div>
   </div>
 </template>
 
@@ -42,12 +44,12 @@ export default {
       this.rightEditor.set(t);
     },
     leftCreate() {
-      const container = document.getElementById("jsoneditor");
+      const container = document.getElementById("first");
       this.leftEditor = new JSONEditor(container, { mode: "code" });
       this.leftEditor.set(this.jsonData);
     },
     rightCreate() {
-      const container = document.getElementById("jsoneditor2");
+      const container = document.getElementById("second");
       this.rightEditor = new JSONEditor(container, {});
       this.rightEditor.set(this.jsonData);
     }
@@ -55,6 +57,27 @@ export default {
 };
 </script>
 
+<style scoped>
+.container {
+  width: 100%;
+  height: 500px;
+  display: flex;
+}
+
+.first {
+  width: 49%;
+  height: 100%;
+  min-width: 10px;
+}
+.separator {
+  width: 2%;
+}
+.second {
+  width: 49%;
+  height: 100%;
+  min-width: 10px;
+}
+</style>
 <style>
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
