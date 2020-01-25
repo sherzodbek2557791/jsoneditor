@@ -1,11 +1,13 @@
 <template>
-  <div id="app" class="container">
-    <div id="first" class="first"></div>
-    <div id="separator" class="separator">
-      <button @click="onDown">-></button>
-      <button @click="onUp">(-</button>
+  <div id="app">
+    <div class="container">
+      <div id="first" class="first"></div>
+      <div id="separator" class="separator">
+        <button @click="onDown">-></button>
+        <button @click="onUp">(-</button>
+      </div>
+      <div id="second" class="second"></div>
     </div>
-    <div id="second" class="second"></div>
   </div>
 </template>
 
@@ -60,7 +62,7 @@ export default {
 <style scoped>
 .container {
   width: 100%;
-  height: 500px;
+  height: 100%;
   display: flex;
 }
 
@@ -85,6 +87,8 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  width: 100%;
+  height: 100%;
+  position: absolute;
 }
 </style>
