@@ -1,23 +1,41 @@
 <template>
   <div id="app">
     <div class="container">
-      <div id="first" class="first"></div>
-      <div id="separator" class="separator">
-        <button @click="onDown">-></button>
-        <button @click="onUp">(-</button>
+      <div class="container-header">
+        <el-button
+          type="success"
+          size="medium"
+          icon="fas fa-save"
+          @click="onSaveClick"
+          :disabled="!isDataChanged"
+        />
       </div>
-      <div id="second" class="second"></div>
+      <div class="container-body">
+        <div id="first" class="first"></div>
+        <div id="separator" class="separator">
+          <button @click="onClickRight">
+            <i class="fas fa-long-arrow-alt-right"></i>
+          </button>
+          <button @@click="onClickLeft">
+            <i class="fas fa-long-arrow-alt-left"></i>
+          </button>
+        </div>
+        <div id="second" class="second"></div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import JSONEditor from "jsoneditor";
+import uuid from "./plugin/uuid";
 
 export default {
   name: "app",
   data() {
     return {
+      jsonDataCached: null,
+      jsonDataId: null,
       jsonData: {
         Array: [1, 2, 3],
         Boolean: true,
@@ -31,28 +49,59 @@ export default {
     };
   },
   mounted() {
+    this.loadFromStore();
     this.leftCreate();
     this.rightCreate();
     this.loadMethod();
+    this.cacheData(this.jsonData);
   },
   methods: {
-    onUp() {
+    loadFromStore() {
+      console.log("this.$store.state.templates", JSON.stringify(this.$store.state.templates));
+      let { templates } = this.$store.state;
+      if (templates.length > 0) {
+        let template = templates[0];
+        this.jsonDataId = template.id;
+        this.jsonData = template.data;
+      } else {
+        this.jsonDataId = uuid();
+      }
+    },
+    cacheData(data) {
+      this.$set(this, "jsonDataCached", JSON.stringify(data));
+    },
+    onClickLeft() {
       let t = this.rightEditor.get();
       this.leftEditor.set(t);
     },
-    onDown() {
+    onClickRight() {
       let t = this.leftEditor.get();
       this.rightEditor.set(t);
     },
+    onLeftChanged() {
+      let json = this.leftEditor.get();
+      this.$set(this, "jsonData", json);
+    },
     leftCreate() {
       const container = document.getElementById("first");
-      this.leftEditor = new JSONEditor(container, { mode: "code" });
+      this.leftEditor = new JSONEditor(container, {
+        mode: "code",
+        onChange: this.onLeftChanged
+      });
       this.leftEditor.set(this.jsonData);
     },
     rightCreate() {
       const container = document.getElementById("second");
       this.rightEditor = new JSONEditor(container, {});
       this.rightEditor.set(this.jsonData);
+    },
+    onSaveClick() {
+      let { jsonDataId, jsonData } = this;
+      this.$store.commit("setTemplate", {
+        id: jsonDataId,
+        data: jsonData
+      });
+      this.cacheData(jsonData);
     },
     loadMethod() {
       // function is used for dragging and moving
@@ -64,6 +113,9 @@ export default {
         element.onmousedown = onMouseDown;
 
         function onMouseDown(e) {
+          if (!e.toElement.classList.contains("separator")) {
+            return;
+          }
           //console.log("mouse down: " + e.clientX);
           md = {
             e,
@@ -100,32 +152,62 @@ export default {
 
       dragElement(document.getElementById("separator"), "H");
     }
+  },
+  computed: {
+    isDataChanged() {
+      let { jsonDataCached, jsonData } = this;
+      if (!jsonDataCached || !jsonData) return false;
+
+      let regex = /\r?\n|\r/g;
+      let data = JSON.stringify(jsonData).replace(regex, "");
+      let cache = jsonDataCached.replace(regex, "");
+      return data !== cache;
+    }
   }
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .container {
   display: flex;
+  flex-direction: column;
   position: absolute;
   top: 5px;
   bottom: 5px;
   left: 5px;
   right: 5px;
-}
 
-.first {
-  width: 49%;
-  height: 100%;
-  min-width: 10px;
-}
-.separator {
-  width: 2%;
-}
-.second {
-  width: 49%;
-  height: 100%;
-  min-width: 10px;
+  &-header {
+    height: 48px;
+    background: #3883fa;
+    align-items: center;
+    align-content: center;
+    display: inherit;
+    padding: 0 10px;
+  }
+
+  &-body {
+    flex-grow: 1;
+    display: flex;
+  }
+
+  .first {
+    width: 49%;
+    height: 100%;
+    min-width: 10px;
+  }
+  .separator {
+    width: 2%;
+    cursor: e-resize;
+    button {
+      font-size: 15pt;
+    }
+  }
+  .second {
+    width: 49%;
+    height: 100%;
+    min-width: 10px;
+  }
 }
 </style>
 <style>
