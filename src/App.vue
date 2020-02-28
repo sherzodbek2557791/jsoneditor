@@ -16,7 +16,7 @@
           <button @click="onClickRight">
             <i class="fas fa-long-arrow-alt-right"></i>
           </button>
-          <button @@click="onClickLeft">
+          <button @click="onClickLeft">
             <i class="fas fa-long-arrow-alt-left"></i>
           </button>
         </div>
@@ -57,7 +57,10 @@ export default {
   },
   methods: {
     loadFromStore() {
-      console.log("this.$store.state.templates", JSON.stringify(this.$store.state.templates));
+      console.log(
+        "this.$store.state.templates",
+        JSON.stringify(this.$store.state.templates)
+      );
       let { templates } = this.$store.state;
       if (templates.length > 0) {
         let template = templates[0];
@@ -72,6 +75,7 @@ export default {
     },
     onClickLeft() {
       let t = this.rightEditor.get();
+      console.log("t", t);
       this.leftEditor.set(t);
     },
     onClickRight() {

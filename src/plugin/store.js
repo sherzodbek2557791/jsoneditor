@@ -5,8 +5,7 @@ import VuexPersist from "vuex-persist";
 Vue.use(Vuex);
 
 const vuexPersist = new VuexPersist({
-  key: "jsoneditor",
-  storage: window.localStorage
+  key: "jsoneditor"
 });
 
 export default new Vuex.Store({
