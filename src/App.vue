@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div class="container">
+    <div class="container" v-loading="loading">
       <div class="container-header">
         <div class="container-header-left">
           <el-button
@@ -10,6 +10,20 @@
             @click="onSaveClick"
             :disabled="!isDataChanged"
           />
+          <el-button
+            type="success"
+            size="medium"
+            icon="fas fa-save"
+            @click="onSaveGenerateUrlClick"
+            :disabled="!isDataChanged"
+          >
+            {{ $t("main.save-and-generate-url") }}</el-button
+          >
+          {{ jsonUrl }}
+          <span style="color: red">{{ jsonLoadingError }}</span>
+          <el-button type="danger" v-if="hasJsonUrl" @click="clearUrlTemplate"
+            >Clear</el-button
+          >
         </div>
         <div class="container-header-center"></div>
         <div class="container-header-right">
@@ -43,6 +57,7 @@ export default {
   components: { LocaleSelect, WriteUs },
   data() {
     return {
+      loading: false,
       jsonDataCached: null,
       jsonDataId: null,
       jsonData: {
@@ -54,22 +69,54 @@ export default {
         String: "Hello World"
       },
       leftEditor: null,
-      rightEditor: null
+      rightEditor: null,
+      jsonLoadingError: null
     };
   },
   mounted() {
-    this.loadFromStore();
-    this.leftCreate();
-    this.rightCreate();
-    this.loadMethod();
-    this.cacheData(this.jsonData);
+    const unwatch = this.$watch(
+      () => this.$route,
+      function() {
+        this.loadData(this);
+        unwatch();
+      }
+    );
+    this.loadAll();
   },
   methods: {
+    loadAll() {
+      this.loadData(this);
+      this.leftCreate();
+      this.rightCreate();
+      this.loadMethod();
+      this.cacheData(this.jsonData);
+      console.log("watch");
+    },
+    loadData() {
+      let { jsonFileUrl } = this.$route.params;
+      if (jsonFileUrl) {
+        this.loading = true;
+        this.jsonDownload(`${this.fileDownloadUrl}/${jsonFileUrl}`)
+          .then(async ({ data }) => {
+            data.text().then(text => {
+              this.jsonData = JSON.parse(text);
+              this.jsonDataId = uuid();
+              this.jsonLoadingError = null;
+              this.leftEditor.set(this.jsonData);
+              this.rightEditor.set(this.jsonData);
+              this.cacheData(this.jsonData);
+              this.loading = false;
+            });
+          })
+          .catch(error => {
+            console.error(error);
+            this.jsonLoadingError = error;
+            this.loadFromStore();
+            this.loading = false;
+          });
+      } else this.loadFromStore();
+    },
     loadFromStore() {
-      console.log(
-        "this.$store.state.templates",
-        JSON.stringify(this.$store.state.templates)
-      );
       let { templates } = this.$store.state;
       if (templates.length > 0) {
         let template = templates[0];
@@ -109,12 +156,49 @@ export default {
       this.rightEditor.set(this.jsonData);
     },
     onSaveClick() {
+      this.jsonData = this.leftEditor.get();
+      this.rightEditor.set(this.jsonData);
       let { jsonDataId, jsonData } = this;
       this.$store.commit("setTemplate", {
         id: jsonDataId,
         data: jsonData
       });
       this.cacheData(jsonData);
+    },
+    clearUrlTemplate() {
+      this.jsonData = {
+        Array: [1, 2, 3],
+        Boolean: true,
+        Null: null,
+        Number: 123,
+        Object: { a: "b", c: "d" },
+        String: "Hello World"
+      };
+      this.cacheData(this.jsonData);
+      this.$store.commit("clearTemplate");
+      this.leftEditor.set(this.jsonData);
+      this.rightEditor.set(this.jsonData);
+      this.$router.push({ path: `/` });
+    },
+    onSaveGenerateUrlClick() {
+      this.jsonData = this.leftEditor.get();
+      this.rightEditor.set(this.jsonData);
+
+      let { jsonData: data, jsonDataId: id } = this;
+      this.jsonUpload(this.fileUploadUrl, data)
+        .then(({ data }) => {
+          let { storedFullName } = data;
+          console.log("SUCCESS!!", data);
+
+          let baseUrl = new RegExp(/^.*\//).exec(window.location.href);
+          let url = `${baseUrl}${storedFullName}`;
+          this.$store.commit("setTemplate", { id, url, data: this.jsonData });
+          this.cacheData(this.jsonData);
+          this.$router.push({ path: `/${storedFullName}` });
+        })
+        .catch(error => {
+          console.error("FAILURE!!", error);
+        });
     },
     loadMethod() {
       // function is used for dragging and moving
@@ -167,6 +251,25 @@ export default {
     }
   },
   computed: {
+    hasJsonUrl() {
+      let { jsonUrl } = this;
+      return jsonUrl && jsonUrl.length > 0;
+    },
+    jsonUrl() {
+      let { jsonFileUrl } = this.$route.params;
+      console.log("this.$route", this.$route);
+      console.log("jsonFileUrl", jsonFileUrl);
+      let baseUrl = new RegExp(/^.*\//).exec(window.location.href);
+      if (jsonFileUrl) return `${baseUrl}${jsonFileUrl}`;
+
+      let { templates } = this.$store.state;
+      if (templates.length > 0) {
+        let template = templates[0];
+        return template.url;
+      } else {
+        return null;
+      }
+    },
     isDataChanged() {
       let { jsonDataCached, jsonData } = this;
       if (!jsonDataCached || !jsonData) return false;

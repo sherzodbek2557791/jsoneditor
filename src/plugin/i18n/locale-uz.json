@@ -1,5 +1,7 @@
 {
-  "main": {},
+  "main": {
+    "save-and-generate-url": "Saqlash va Havola olish"
+  },
   "write-us": {
     "title": "Bizga yozish",
     "answer": "Bizga yozish imkoniyati ishlab chiqish jarayonida. Ushbu imkoniyat haqqatdan ham sizga kerak bo'ladimi?",

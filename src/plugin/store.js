@@ -32,6 +32,9 @@ export default new Vuex.Store({
       }
       templates.push(data);
     },
+    clearTemplate(state) {
+      Vue.set(state, "templates", []);
+    },
     setLocale(state, data) {
       Vue.set(state, "locale", data);
     },
