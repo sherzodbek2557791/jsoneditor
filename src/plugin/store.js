@@ -10,8 +10,14 @@ const vuexPersist = new VuexPersist({
 
 export default new Vuex.Store({
   state: {
+    locale: "ru",
     templates: [],
-    uiState: {}
+    uiState: {
+      writeUs: {
+        confirmed: 185,
+        rejected: 17
+      }
+    }
   },
   mutations: {
     setTemplate(state, data) {
@@ -25,6 +31,15 @@ export default new Vuex.Store({
         }
       }
       templates.push(data);
+    },
+    setLocale(state, data) {
+      Vue.set(state, "locale", data);
+    },
+    addWriteUsConfirm(state) {
+      state.uiState.writeUs.confirmed++;
+    },
+    addWriteUsCancel(state) {
+      state.uiState.writeUs.rejected++;
     }
   },
   actions: {},

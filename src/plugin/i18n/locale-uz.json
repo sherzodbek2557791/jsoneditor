@@ -1,0 +1,9 @@
+{
+  "main": {},
+  "write-us": {
+    "title": "Bizga yozish",
+    "answer": "Bizga yozish imkoniyati ishlab chiqish jarayonida. Ushbu imkoniyat haqqatdan ham sizga kerak bo'ladimi?",
+    "confirm": "Ha, judayam kerak",
+    "reject": "Yo'q, rahmat!"
+  }
+}

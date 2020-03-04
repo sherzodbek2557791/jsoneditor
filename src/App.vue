@@ -2,13 +2,20 @@
   <div id="app">
     <div class="container">
       <div class="container-header">
-        <el-button
-          type="success"
-          size="medium"
-          icon="fas fa-save"
-          @click="onSaveClick"
-          :disabled="!isDataChanged"
-        />
+        <div class="container-header-left">
+          <el-button
+            type="success"
+            size="medium"
+            icon="fas fa-save"
+            @click="onSaveClick"
+            :disabled="!isDataChanged"
+          />
+        </div>
+        <div class="container-header-center"></div>
+        <div class="container-header-right">
+          <locale-select />
+          <write-us />
+        </div>
       </div>
       <div class="container-body">
         <div id="first" class="first"></div>
@@ -29,9 +36,11 @@
 <script>
 import JSONEditor from "jsoneditor";
 import uuid from "./plugin/uuid";
+import LocaleSelect from "./components/LocaleSelect";
+import WriteUs from "./components/WriteUs";
 
 export default {
-  name: "app",
+  components: { LocaleSelect, WriteUs },
   data() {
     return {
       jsonDataCached: null,
@@ -186,13 +195,19 @@ export default {
     background: #3883fa;
     align-items: center;
     align-content: center;
-    display: inherit;
+    display: flex;
     padding: 0 10px;
+
+    &-center {
+      flex-grow: 1;
+    }
   }
 
   &-body {
     flex-grow: 1;
     display: flex;
+    position: relative;
+    max-height: calc(100% - 48px);
   }
 
   .first {
