@@ -34,14 +34,37 @@
       <div class="container-body">
         <div id="first" class="first"></div>
         <div id="separator" class="separator">
-          <button @click="onClickRight">
-            <i class="fas fa-long-arrow-alt-right"></i>
-          </button>
-          <button @click="onClickLeft">
-            <i class="fas fa-long-arrow-alt-left"></i>
-          </button>
+          <el-button
+            size="mini"
+            type="success"
+            icon="fas fa-long-arrow-alt-right"
+            @click="onClickRight"
+            circle
+            plain
+          />
+          <div></div>
+          <el-button
+            size="mini"
+            type="warning"
+            icon="fas fa-long-arrow-alt-left"
+            @click="onClickLeft"
+            circle
+            plain
+          />
         </div>
         <div id="second" class="second"></div>
+      </div>
+      <div class="container-footer">
+        <a href="http://www.uz/ru/res/visitor/index?id=44757" target="_top">
+          <img
+            height="31"
+            width="88"
+            alt="Топ рейтинг www.uz"
+            src="https://cnt0.www.uz/counter/collect?id=44757&pg=http%3A//uzinfocom.uz&&col=3883fa&amp;t=ffffff&amp;p=67C23A"
+        /></a>
+        <!--        <div style="color: #3883fa"></div>-->
+        <!--        <div style="color: #ffffff"></div>-->
+        <!--        <div style="color: #67C23A"></div>-->
       </div>
     </div>
   </div>
@@ -313,6 +336,15 @@ export default {
     max-height: calc(100% - 48px);
   }
 
+  &-footer {
+    height: 48px;
+
+    a {
+      float: right;
+      margin-top: 8px;
+    }
+  }
+
   .first {
     width: 49%;
     height: 100%;
@@ -321,6 +353,9 @@ export default {
   .separator {
     width: 2%;
     cursor: e-resize;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
     button {
       font-size: 15pt;
     }
