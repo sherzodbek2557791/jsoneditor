@@ -62,9 +62,13 @@
             alt="Топ рейтинг www.uz"
             src="https://cnt0.www.uz/counter/collect?id=44757&pg=http%3A//uzinfocom.uz&&col=3883fa&amp;t=ffffff&amp;p=67C23A"
         /></a>
+        <!--       src="https://cnt0.www.uz/counter/collect?id=44757&pg=https%3A//jsoneditor.uz&&col=3883fa&amp;t=ffffff&amp;p=67C23A" -->
         <!--        <div style="color: #3883fa"></div>-->
         <!--        <div style="color: #ffffff"></div>-->
         <!--        <div style="color: #67C23A"></div>-->
+        <!--<a href="http://www.uz/ru/res/visitor/index?id=44757" target=_top>
+          <img src="http://cnt0.www.uz/counter/collect?'+top_r+top_rat+'" width=88 height=31 border=0 alt="Топ рейтинг www.uz">
+        </a>-->
       </div>
     </div>
   </div>
@@ -274,6 +278,9 @@ export default {
     }
   },
   computed: {
+    topRat() {
+      return document.top_r + document.top_rat;
+    },
     hasJsonUrl() {
       let { jsonUrl } = this;
       return jsonUrl && jsonUrl.length > 0;
