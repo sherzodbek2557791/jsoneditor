@@ -54,14 +54,14 @@
         </div>
         <div id="second" class="second"></div>
       </div>
-      <div class="container-footer">
-        <a href="http://www.uz/ru/res/visitor/index?id=44757" target="_top">
-          <img
+      <div class="statistic-body container-footer">
+        <!-- <a href="http://www.uz/ru/res/visitor/index?id=44757" target="_top">
+          &lt;!&ndash;<img
             height="31"
             width="88"
             alt="Топ рейтинг www.uz"
             src="https://cnt0.www.uz/counter/collect?id=44757&pg=http%3A//uzinfocom.uz&&col=3883fa&amp;t=ffffff&amp;p=67C23A"
-        /></a>
+        />&ndash;&gt;</a>-->
         <!--       src="https://cnt0.www.uz/counter/collect?id=44757&pg=https%3A//jsoneditor.uz&&col=3883fa&amp;t=ffffff&amp;p=67C23A" -->
         <!--        <div style="color: #3883fa"></div>-->
         <!--        <div style="color: #ffffff"></div>-->
@@ -117,6 +117,7 @@ export default {
       this.rightCreate();
       this.loadMethod();
       this.cacheData(this.jsonData);
+      this.loadStatistic();
       console.log("watch");
     },
     loadData() {
@@ -275,6 +276,15 @@ export default {
       }
 
       dragElement(document.getElementById("separator"), "H");
+    },
+    loadStatistic() {
+      let content = document.querySelector("#www-statistic");
+      let body = this.$el.getElementsByClassName("statistic-body")[0];
+      if (content == null || content.parentNode == null) return;
+
+      content.parentNode.removeChild(content);
+      body.appendChild(content);
+      content.style.display = "block";
     }
   },
   computed: {
@@ -345,11 +355,6 @@ export default {
 
   &-footer {
     height: 48px;
-
-    a {
-      float: right;
-      margin-top: 8px;
-    }
   }
 
   .first {
