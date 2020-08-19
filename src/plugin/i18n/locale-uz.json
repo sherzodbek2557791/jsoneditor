@@ -1,6 +1,8 @@
 {
   "main": {
-    "save-and-generate-url": "Saqlash va Havola olish"
+    "save-and-generate-url": "Saqlash va Havola olish",
+    "copiedText": "Nusxa olindi: {text}",
+    "cannotCopy": "Nusxa olish imkoni bo`lmadi"
   },
   "write-us": {
     "title": "Bizga yozish",

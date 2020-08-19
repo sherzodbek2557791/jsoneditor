@@ -19,11 +19,13 @@
           >
             {{ $t("main.save-and-generate-url") }}</el-button
           >
-          {{ jsonUrl }}
-          <span style="color: red">{{ jsonLoadingError }}</span>
-          <el-button type="danger" v-if="hasJsonUrl" @click="clearUrlTemplate"
-            >Clear</el-button
-          >
+          <template v-if="hasJsonUrl">
+            <el-link class="json-link" @click="copyText(jsonUrl)">{{
+              jsonUrl
+            }}</el-link>
+            <span style="color: red">{{ jsonLoadingError }}</span>
+            <el-button type="danger" @click="clearUrlTemplate">Clear</el-button>
+          </template>
         </div>
         <div class="container-header-center"></div>
         <div class="container-header-right">
@@ -285,6 +287,17 @@ export default {
       content.parentNode.removeChild(content);
       body.appendChild(content);
       content.style.display = "block";
+    },
+    copyText(value) {
+      let input = document.createElement("input");
+      input.setAttribute("value", value);
+      document.body.appendChild(input);
+      input.select();
+      let result = document.execCommand("copy");
+      document.body.removeChild(input);
+      if (result)
+        this.$message.success(this.$t("main.copiedText", { text: value }));
+      else this.$message.error("main.cannotCopy");
     }
   },
   computed: {
@@ -341,6 +354,18 @@ export default {
     display: flex;
     padding: 0 10px;
 
+    /deep/ .is-underline:hover:after {
+      border-bottom: 1px solid white !important;
+    }
+
+    .json-link {
+      margin-left: 5px;
+      margin-right: 5px;
+
+      /deep/ .el-link--inner {
+        color: white;
+      }
+    }
     &-center {
       flex-grow: 1;
     }

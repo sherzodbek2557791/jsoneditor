@@ -1,6 +1,8 @@
 {
   "main": {
-    "save-and-generate-url": "Сохранить и Получить ссылку"
+    "save-and-generate-url": "Сохранить и Получить ссылку",
+    "copiedText": "Скопирован: {text}",
+    "cannotCopy": "Ошибка копирования"
   },
   "write-us": {
     "title": "Написать нам",
