@@ -56,22 +56,7 @@
         </div>
         <div id="second" class="second"></div>
       </div>
-      <div class="statistic-body container-footer">
-        <!-- <a href="http://www.uz/ru/res/visitor/index?id=44757" target="_top">
-          &lt;!&ndash;<img
-            height="31"
-            width="88"
-            alt="Топ рейтинг www.uz"
-            src="https://cnt0.www.uz/counter/collect?id=44757&pg=http%3A//uzinfocom.uz&&col=3883fa&amp;t=ffffff&amp;p=67C23A"
-        />&ndash;&gt;</a>-->
-        <!--       src="https://cnt0.www.uz/counter/collect?id=44757&pg=https%3A//jsoneditor.uz&&col=3883fa&amp;t=ffffff&amp;p=67C23A" -->
-        <!--        <div style="color: #3883fa"></div>-->
-        <!--        <div style="color: #ffffff"></div>-->
-        <!--        <div style="color: #67C23A"></div>-->
-        <!--<a href="http://www.uz/ru/res/visitor/index?id=44757" target=_top>
-          <img src="http://cnt0.www.uz/counter/collect?'+top_r+top_rat+'" width=88 height=31 border=0 alt="Топ рейтинг www.uz">
-        </a>-->
-      </div>
+      <div class="statistic-body container-footer"></div>
     </div>
   </div>
 </template>
@@ -120,7 +105,6 @@ export default {
       this.loadMethod();
       this.cacheData(this.jsonData);
       this.loadStatistic();
-      console.log("watch");
     },
     loadData() {
       let { jsonFileUrl } = this.$route.params;
@@ -310,8 +294,6 @@ export default {
     },
     jsonUrl() {
       let { jsonFileUrl } = this.$route.params;
-      console.log("this.$route", this.$route);
-      console.log("jsonFileUrl", jsonFileUrl);
       let baseUrl = new RegExp(/^.*\//).exec(window.location.href);
       if (jsonFileUrl) return `${baseUrl}${jsonFileUrl}`;
 
